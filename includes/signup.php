@@ -10,9 +10,9 @@ if(isset($_POST["submit "])) {
     $password = $_POST["password"];
     $password_confirmation = $_POST["password_confirmation"];
     
-    // Instantiate UserAccount class
-    include "../classes/UserAcccount.php";
-    $user_account = new UserAcccount($name, $email, $phone, $address, $password, $password_confirmation);
+    // Instantiate CustomerController class
+    include "../constrollers/CustomerController.php";
+    $new_customer = new CustomerController($name, $email, $phone, $address, $password, $password_confirmation);
 
 
     // Running error handlers and signup
@@ -24,7 +24,7 @@ if(isset($_POST["submit "])) {
 
 $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-$mysqli = require __DIR__."../database.php";
+$mysqli = require __DIR__."../db_connection.php";
 
 // $sql = "INSERT INTO user (name, email, password_hash)
 //         VALUES (?, ?, ?)";

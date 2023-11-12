@@ -1,6 +1,6 @@
 <?php
 
-class UserAccount {
+class CustomerController {
 
     private $name;
     private $email;
@@ -39,10 +39,10 @@ class UserAccount {
         return $result;        
     }
 
-    private function invalidCharacters(input)
+    private function invalidCharacters($input)
     {
         $result;
-        if (!preg_match("/^[a-zA-Z0-9]*$/", input)) {
+        if (!preg_match("/^[a-zA-Z0-9]*$/", $input)) {
             $result = false;
         }
         else 
