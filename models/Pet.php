@@ -13,7 +13,7 @@
 	$Weight = $_POST['Weight'];
 	
 	//database connection
-	$conn = new mysqli_connect($servername, $username, $dbpassword, $database);
+	$conn = new mysqli($servername, $username, $dbpassword, $database);
 	if($conn->connect_error){
 		die('Connection Failed : '.$conn->connect_error);
 	}else{
