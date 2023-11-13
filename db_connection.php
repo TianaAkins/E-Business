@@ -1,7 +1,7 @@
 <?php
 
 $host = "localhost";
-$dbname = "login_db";
+$dbname = "pawsalon";
 $username = "root";
 $password = "";
 
@@ -12,3 +12,5 @@ if ($mysqli->connect_errno) {
 }
 
 return $mysqli;
+
+?>
