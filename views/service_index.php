@@ -1,8 +1,9 @@
-<?php 
+<?php
 
-    require_once('config/db_connection.php');
-    $query = " SELECT * FROM `service` ";
-    $result = mysqli_query($mysqli,$query);
+require_once 'config/db_connection.php';
+require_once 'controllers/servicecontroller.php';
+
+$result = display_data();
 
 ?>
 
@@ -26,24 +27,19 @@
                                 <td> Service Name </td>
                                 <td> Service Cost </td>
                             </tr>
+                            <tr>
+                            <?php   
 
+                                while($row=mysqli_fetch_assoc($result))
+                                {
+                            ?>                                    
+                                    <td><?php echo $row['ServiceId']; ?></td>
+                                    <td><?php echo $row['ServiceName']; ?></td>
+                                    <td><?php echo $row['ServiceCost']; ?></td>
+                            </tr>        
                             <?php 
-                                    
-                                    while($row=mysqli_fetch_assoc($result))
-                                    {
-                                        $ServiceID = $row['ServiceID'];
-                                        $ServiceName = $row['ServiceName'];
-                                        $ServiceCost = $row['ServiceCost'];
-                            ?>
-                                    <tr>
-                                        <td><?php echo $ServiceID ?></td>
-                                        <td><?php echo $ServiceName ?></td>
-                                        <td><?php echo $ServiceCost ?></td>
-                                        <td><a href="#" class="btn btn-pencil">Edit</a></td>
-                                        <td><a href="#" class="btn btn-danger">Delete</a></td>
-                                    </tr>        
-                            <?php 
-                                    }  
+                              } 
+
                             ?>                                                                                               
                         </table>
                     </div>
