@@ -1,7 +1,7 @@
 <?php
 	$servername = "localhost";
 	$username = "root";
-	$dbpassword = "";
+	$dbpassword = "root";
 	$database = "pawsalon"
 
 	$CustomerID = $_POST['CustomerID'];
@@ -11,7 +11,7 @@
 	$Breed = $_POST['Breed'];
 	$HairType = $_POST['HairType'];
 	$Weight = $_POST['Weight'];
-	
+
 	//database connection
 	$conn = new mysqli($servername, $username, $dbpassword, $database);
 	if($conn->connect_error){
@@ -25,5 +25,7 @@
 		$stmt->close();
 		$conn->close();
 	}
+
+	
 	
 ?>
