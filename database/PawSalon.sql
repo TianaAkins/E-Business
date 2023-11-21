@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Nov 14, 2023 at 04:59 AM
+-- Generation Time: Nov 21, 2023 at 04:10 AM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
@@ -31,7 +31,7 @@ CREATE TABLE `Appointment` (
   `AppointmentID` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL,
   `PetID` int(11) NOT NULL,
-  `EmployeeID` int(11) NOT NULL,
+  `ServiceID` int(11) NOT NULL,
   `ApptDate` date NOT NULL,
   `ApptTime` time NOT NULL,
   `ApptStatus` varchar(20) NOT NULL,
@@ -42,53 +42,18 @@ CREATE TABLE `Appointment` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `AppointmentService`
---
-
-CREATE TABLE `AppointmentService` (
-  `AppointmentID` int(11) NOT NULL,
-  `ServiceID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Customer`
 --
 
 CREATE TABLE `Customer` (
   `CustomerID` int(11) NOT NULL,
-  `Name` varchar(50) NOT NULL,
+  `CustFirst` varchar(50) NOT NULL,
+  `CustLast` varchar(50) NOT NULL,
+  `Email` varchar(100) NOT NULL,
   `Address` varchar(255) NOT NULL,
   `Phone` varchar(12) NOT NULL,
-  `Active` bit(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Employee`
---
-
-CREATE TABLE `Employee` (
-  `EmployeeID` int(11) NOT NULL,
-  `EmpType` varchar(50) NOT NULL,
-  `EmpFirst` int(50) NOT NULL,
-  `EmpPhone` int(12) NOT NULL,
   `Active` bit(1) NOT NULL,
-  `EmpLast` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `EmployeeAccount`
---
-
-CREATE TABLE `EmployeeAccount` (
-  `EmployeeID` int(11) NOT NULL,
-  `Email` int(11) NOT NULL,
-  `PasswordHash` int(11) NOT NULL
+  `Password` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -120,18 +85,6 @@ CREATE TABLE `Service` (
   `ServiceCost` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `UserAccount`
---
-
-CREATE TABLE `UserAccount` (
-  `CustomerID` int(11) NOT NULL,
-  `Email` varchar(150) NOT NULL,
-  `PasswordHash` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --
 -- Indexes for dumped tables
 --
@@ -143,34 +96,14 @@ ALTER TABLE `Appointment`
   ADD PRIMARY KEY (`AppointmentID`),
   ADD KEY `FK_Appointment_Customer` (`CustomerID`),
   ADD KEY `FK_Appointment_Pet` (`PetID`),
-  ADD KEY `FK_Appointment_Employee` (`EmployeeID`);
-
---
--- Indexes for table `AppointmentService`
---
-ALTER TABLE `AppointmentService`
-  ADD KEY `FK_AppointmentService_Appointment` (`AppointmentID`),
-  ADD KEY `FK_AppointmentService_Service` (`ServiceID`);
+  ADD KEY `FK_Appointment_Service` (`ServiceID`);
 
 --
 -- Indexes for table `Customer`
 --
 ALTER TABLE `Customer`
   ADD PRIMARY KEY (`CustomerID`),
-  ADD UNIQUE KEY `Phone` (`Phone`);
-
---
--- Indexes for table `Employee`
---
-ALTER TABLE `Employee`
-  ADD PRIMARY KEY (`EmployeeID`),
-  ADD UNIQUE KEY `EmpPhone` (`EmpPhone`);
-
---
--- Indexes for table `EmployeeAccount`
---
-ALTER TABLE `EmployeeAccount`
-  ADD PRIMARY KEY (`EmployeeID`),
+  ADD UNIQUE KEY `Phone` (`Phone`),
   ADD UNIQUE KEY `Email` (`Email`);
 
 --
@@ -187,13 +120,6 @@ ALTER TABLE `Service`
   ADD PRIMARY KEY (`ServiceID`);
 
 --
--- Indexes for table `UserAccount`
---
-ALTER TABLE `UserAccount`
-  ADD PRIMARY KEY (`Email`),
-  ADD UNIQUE KEY `CustomerID` (`CustomerID`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -208,12 +134,6 @@ ALTER TABLE `Appointment`
 --
 ALTER TABLE `Customer`
   MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Employee`
---
-ALTER TABLE `Employee`
-  MODIFY `EmployeeID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Pet`
@@ -236,33 +156,14 @@ ALTER TABLE `Service`
 --
 ALTER TABLE `Appointment`
   ADD CONSTRAINT `FK_Appointment_Customer` FOREIGN KEY (`CustomerID`) REFERENCES `Customer` (`CustomerID`),
-  ADD CONSTRAINT `FK_Appointment_Employee` FOREIGN KEY (`EmployeeID`) REFERENCES `Employee` (`EmployeeID`),
-  ADD CONSTRAINT `FK_Appointment_Pet` FOREIGN KEY (`PetID`) REFERENCES `Pet` (`PetID`);
-
---
--- Constraints for table `AppointmentService`
---
-ALTER TABLE `AppointmentService`
-  ADD CONSTRAINT `FK_AppointmentService_Appointment` FOREIGN KEY (`AppointmentID`) REFERENCES `Appointment` (`AppointmentID`),
-  ADD CONSTRAINT `FK_AppointmentService_Service` FOREIGN KEY (`ServiceID`) REFERENCES `Service` (`ServiceID`);
-
---
--- Constraints for table `EmployeeAccount`
---
-ALTER TABLE `EmployeeAccount`
-  ADD CONSTRAINT `FK_EmployeeAccount_Employee` FOREIGN KEY (`EmployeeID`) REFERENCES `Employee` (`EmployeeID`);
+  ADD CONSTRAINT `FK_Appointment_Pet` FOREIGN KEY (`PetID`) REFERENCES `Pet` (`PetID`),
+  ADD CONSTRAINT `FK_Appointment_Service` FOREIGN KEY (`ServiceID`) REFERENCES `Service` (`ServiceID`);
 
 --
 -- Constraints for table `Pet`
 --
 ALTER TABLE `Pet`
   ADD CONSTRAINT `FK_Pet_Customer` FOREIGN KEY (`CustomerID`) REFERENCES `Customer` (`CustomerID`);
-
---
--- Constraints for table `UserAccount`
---
-ALTER TABLE `UserAccount`
-  ADD CONSTRAINT `FK_UserAccount_Customer` FOREIGN KEY (`CustomerID`) REFERENCES `Customer` (`CustomerID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
