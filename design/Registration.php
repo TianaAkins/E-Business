@@ -76,3 +76,69 @@
     </div>
 </body>
 </html>
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    
+}
+
+function emptyInput()
+{
+    $result = false;
+    if (empty($this->name) ||
+        empty($this->email) ||
+        empty($this->phone) ||
+        empty($this->address) ||
+        empty($this->password) ||
+        empty($this->password_confirmation)) 
+    {
+        $result = true; 
+    }         
+    return $result;        
+}
+
+function invalidCharacters($input)
+{
+    $result;
+    if (!preg_match("/^[a-zA-Z0-9]*$/", $input)) {
+        $result = false;
+    }
+    else 
+    {
+        $result = true;
+    }
+    return $result;
+}
+
+function invalidEmail()
+{
+    $result;
+    if (!filter_var($this->$email, FILTER_VALIDATE_EMAIL))
+    {
+        $result = false;
+    }
+    else 
+    {
+        $result = true;
+    }
+    return $result;
+}
+
+function pwdMatch() 
+{
+    $result;
+    if ($this->$password !== $this->$password_confirmation)
+    {
+        $result = false;
+    }
+    else 
+    {
+        $result = true;
+    }
+    return $result;
+}
+
+
+?>
