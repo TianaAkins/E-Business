@@ -16,7 +16,7 @@
       </div>
 <fieldset>
   
-  <form name="frmPetProfile" method="post" action="C:\MAMP\htdocs\pawsalon\models\pet.php">
+  <form name="frmPetProfile" method="post" action="../models/pet.php">
     <p>
       <label for="Name">CustomerID </label>
       <input type="text" class="form-control" name="CustomerID" id="CustomerID" placeholder="CustomerID" value="" required>
