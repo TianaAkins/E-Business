@@ -1,4 +1,59 @@
-<!DOCTYPE html>
+<?php
+$showAlert = false;  
+$showError = false;  
+$exists=false; 
+    
+if($_SERVER["REQUEST_METHOD"] == "POST") { 
+       
+    include '../database/db_connection.php';    
+    
+    $firstName = $_POST["firstName"];  
+	$lastName = $_POST["lastName"];
+	$address = $_POST["address"];
+	$phone = $_POST["phone"];
+	$email = $_POST["email"];
+    $password = $_POST["password"];  
+    $cpassword = $_POST["cpassword"]; 
+    
+    $sql = "Select * from customer where email='$email'"; 
+    
+    $result = mysqli_query($mysqli, $sql); 
+    
+    $num = mysqli_num_rows($result);  
+    
+    // This sql query is use to check if 
+    // the email is already present  
+    // or not in our Database 
+    if($num == 0) { 
+        if(($password == $cpassword) && $exists==false) { 
+    
+            $hash = password_hash($password,  
+                                PASSWORD_DEFAULT); 
+                
+            // Password Hashing is used here.  
+            $sql = "INSERT INTO `customer` VALUES ('$firstName', '$lastName', '$email', '$address', '$phone', 1, '$hash');"; 
+    
+            $result = mysqli_query($mysqli, $sql); 
+    
+            if ($result) { 
+                $showAlert = true;  
+            } 
+        }  
+        else {  
+            $showError = "Passwords do not match";  
+        }       
+    }// end if  
+    
+   if($num>0)  
+   { 
+      $exists="Email is already in use.";  
+   }  
+    
+}//end if    
+    
+?> 
+
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,19 +64,61 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
+<?php 
+    
+    if($showAlert) { 
+    
+        echo ' <div class="alert alert-success  
+            alert-dismissible fade show" role="alert"> 
+    
+            <strong>Success!</strong> Your account is  
+            now created and you can login.  
+            <button type="button" class="close"
+                data-dismiss="alert" aria-label="Close">  
+                <span aria-hidden="true">×</span>  
+            </button>  
+        </div> ';  
+    } 
+    
+    if($showError) { 
+    
+        echo ' <div class="alert alert-danger  
+            alert-dismissible fade show" role="alert">  
+        <strong>Error!</strong> '. $showError.'
+    
+       <button type="button" class="close" 
+            data-dismiss="alert aria-label="Close"> 
+            <span aria-hidden="true">×</span>  
+       </button>  
+     </div> ';  
+   } 
+        
+    if($exists) { 
+        echo ' <div class="alert alert-danger  
+            alert-dismissible fade show" role="alert"> 
+    
+        <strong>Error!</strong> '. $exists.'
+        <button type="button" class="close" 
+            data-dismiss="alert" aria-label="Close">  
+            <span aria-hidden="true">×</span>  
+        </button> 
+       </div> ';  
+     } 
+   
+?> 
     <div class="wrapper">
-        <form name = "SignUp">
+        <form name = "SignUp" action = "Registration.php" method = "post">
 
             <div class="image">
                 <img src="PawSalon.png" alt="Icon" class="Icon">
             </div>    
 
             <h1>Sign Up</h1>
-            
-            <div class="input-box">
+         
+			<div class="input-box">
                 <div class="input-field">
                         <i class='bx bx-user'></i>
-                        <input type="text" placeholder="First Name" required style="width: 475px; height: 25px;">
+                        <input type="text" label for = "firstName" placeholder="First Name" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>

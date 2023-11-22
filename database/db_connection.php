@@ -8,7 +8,7 @@ $password = "root";
 
 $mysqli = new mysqli($host, $username, $password, $dbname);
 
-if ($mysqli->connect_errno) {
+if ($mysqli->connect_error) {
     die("Connection Error: " . $mysqli->connect_error);
 }
   
