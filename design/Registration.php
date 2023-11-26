@@ -1,3 +1,84 @@
+<?php
+
+$first = $last = $address = $phone = $email = $password = $password_confirmation = "";
+$pwMatchError = ""; $pwDontMatch = false;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+
+    $first = test_input($_POST["first"]);
+    $last = test_input($_POST["last"]);
+    $address = test_input($_POST["address"]);
+    $phone = test_input($_POST["phone"]);
+    $email = test_input($_POST["email"]);    
+    $password = test_input($_POST["password"]);   
+    $password_confirmation = test_input($_POST["password_confirmation"]);
+
+    // if passwords match then create new account
+    if(pwdMatch($password, $password_confirmation))
+    {
+         // DB connection
+        $host = "localhost";
+        $dbname = "PawSalon";
+        $username = "root";
+        $pw = "root";
+
+        $mysqli = new mysqli($host, $username, $pw, $dbname);
+
+        if ($mysqli->connect_error) {
+            die("Connection Error: " . $mysqli->connect_error);
+        }
+
+        $stmt = $mysqli->prepare("INSERT INTO Customer (CustFirst, CustLast, Email, Address, Phone, Active, Password)
+                VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssis", $CustFirst, $CustLast, $Email, $Address, $Phone, $Active, $Password);
+
+        $CustFirst = $first;
+        $CustLast = $last;
+        $Email = $email;
+        $Address = $address;
+        $Phone = $phone;
+        $Active = 1;
+        $Password = $password;
+        $stmt->execute();
+
+        $stmt->close();
+        $mysqli->close();
+
+        // Redirect to Login    
+    }
+    // else passwords didn't match and send back form 
+    else 
+    {        
+        $first = $_POST["first"];
+        $last = $_POST["last"];
+        $address = $_POST["address"];
+        $phone = $_POST["phone"];
+        $email = $_POST["email"];
+        $pwMatchError = "Passwords don't match";
+        $pwDontMatch = true;
+    }   
+}
+
+function test_input($data) 
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+function pwdMatch($password, $password_confirmation) 
+{
+    $result = true;
+    if ($password !== $password_confirmation)
+    {
+        $result = false;
+    }
+    return $result;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +91,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <form action="Registration.php" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
             <div class="image">
                 <img src="PawSalon.png" alt="Icon" class="Icon">
             </div>    
@@ -19,34 +100,34 @@
             <div class="input-box">
                 <div class="input-field">
                     <i class='bx bx-user'></i>
-                    <input type="text" name="first" placeholder="First Name" required style="width: 475px; height: 25px;">                        
+                    <input type="text" name="first" placeholder="First Name" value="<?php if($pwDontMatch) echo $first;?>" required style="width: 475px; height: 25px;">                        
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
                     <i class='bx bx-user'></i>
-                    <input type="text" name="last" placeholder="Last Name" required style="width: 475px; height: 25px;">                        
+                    <input type="text" name="last" placeholder="Last Name" value="<?php if($pwDontMatch) echo $last;?>" required style="width: 475px; height: 25px;">                        
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
                     <i class='bx bxs-building-house' ></i>
-                    <input type="text" name="address" placeholder="Address" required style="width: 475px; height: 25px;">                        
+                    <input type="text" name="address" placeholder="Address" value="<?php if($pwDontMatch) echo $address;?>" required style="width: 475px; height: 25px;">                        
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
                     <i class='bx bx-phone' ></i>
-                    <input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Phone 888-888-8888" required style="width: 475px; height: 25px;"> 
+                    <input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" value="<?php if($pwDontMatch) echo $phone;?>" placeholder="Phone 888-888-8888" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
                     <i class='bx bxs-envelope' ></i>
-                    <input type="email" name="email" placeholder="Email" required style="width: 475px; height: 25px;">                        
+                    <input type="email" name="email" placeholder="Email" value="<?php if($pwDontMatch) echo $email;?>" required style="width: 475px; height: 25px;">                        
                 </div>
             </div>
-            <div><?php echo $pwErr; ?></div>
+            <div> <?php echo $pwMatchError; ?> </div>
             <div class="input-box">
                 <div class="input-field">                    
                     <i class='bx bxs-lock-alt' ></i>                    
@@ -66,93 +147,7 @@
             <h2>Already have an account?</h2>
             <h2> Click below to login.</h2>                        
         </form>
-        <button href="./Login.php" class="btn" style="margin-left:90px; width: 300px; height: 25px;">Login</button>
+        <button onclick="location.href='Login.php'" class="btn" style="margin-left:90px; width: 300px; height: 25px;">Login</button>
     </div>    
 </body>
 </html>
-
-<?php
-
-$first = $last = $address = $phone = $email = $password = $password_confirmation = "";
-$pwErr = "Hello";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-
-    $first = test_input($_POST["first"]);
-    $last = test_input($_POST["last"]);
-    $address = test_input($_POST["address"]);
-    $phone = test_input($_POST["phone"]);
-    $email = test_input($_POST["email"]);    
-    $password = test_input($_POST["password"]);   
-    $password_confirmation = test_input($_POST["password_confirmation"]);
-
-    // DB connection
-    $host = "localhost";
-    $dbname = "PawSalon";
-    $username = "root";
-    $pw = "root";
-
-    $mysqli = new mysqli($host, $username, $pw, $dbname);
-
-    if ($mysqli->connect_error) {
-        die("Connection Error: " . $mysqli->connect_error);
-    }
-
-    $stmt = $mysqli->prepare("INSERT INTO Customer (CustFirst, CustLast, Email, Address, Phone, Active, Password)
-            VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssis", $CustFirst, $CustLast, $Email, $Address, $Phone, $Active, $Password);
-
-    $CustFirst = $first;
-    $CustLast = $last;
-    $Email = $email;
-    $Address = $address;
-    $Phone = $phone;
-    $Active = 1;
-    $Password = $password;
-    $stmt->execute();
-
-    $stmt->close();
-    $mysqli->close();
-
-    // Redirect to Login
-}
-
-function test_input($data) 
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
- }
-
-function validCharacters($input, $error)
-{
-    if (!preg_match("/^[a-zA-Z0-9]*$/", $input))
-    {
-        $error = "Only letters and numbers allowed";
-    }
-    return $error;
-}
-
-function invalidEmail($email)
-{
-    $result = true;
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-    {
-        $result = false;
-    }
-    return $result;
-}
-
-function pwdMatch($password, $password_confirmation) 
-{
-    $result = true;
-    if ($password !== $password_confirmation)
-    {
-        $result = false;
-    }
-    return $result;
-}
-
-?>

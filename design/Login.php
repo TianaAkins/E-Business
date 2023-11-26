@@ -38,7 +38,7 @@
             <button type="submit" class="btn" style="margin-left:0px; width: 475px; height: 25px;">Login</button>
             <h2>Don't have an account?</h2>
             <h2> Click below to register.</h2>
-            <button onclick="location.href='Registration.html'" type="submit" class="btn" style="margin-left:90px; width: 300px; height: 25px;">Register</button>
+            <button onclick="location.href='Registration.php'" type="submit" class="btn" style="margin-left:90px; width: 300px; height: 25px;">Register</button>
 
             
         </form>
