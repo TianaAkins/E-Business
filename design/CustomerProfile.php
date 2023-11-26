@@ -14,11 +14,13 @@
             <h1>Customer Profile</h1>
             <div class="topbar">
                 <h2>Customer Support: 254-323-3421</h2>
-                <a href="Login.html">Logout</a>
-                <a href="Appointments.html">Appointments</a>
-                <a href="Services.html">Services</a>
-                <a href="PetProfile.html">Pet Profile</a>
-                <a href="CustomerProfile.html">Customer Profile</a>
+                <a href="Home.php">Logout</a>
+                <a href="Contact.php">Contact Us</a>
+                <a href="Gallery.php">Gallery</a>
+                <a href="Appointments.php">Appointments</a>
+                <a href="Services.php">Services</a>
+                <a href="PetProfile.php">Pet Profile</a>
+                <a href="CustomerProfile.php">Customer Profile</a>
             </div>
             <hr>
         </div>
