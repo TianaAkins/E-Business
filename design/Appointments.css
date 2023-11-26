@@ -69,12 +69,44 @@ padding: 5px 5px;
 color: gray;
 }
 
-.wrapper h3{
+h3{
     font-size: 18px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     text-align: center;
     padding-top: 10px;
     margin-bottom: 10px;
+    color: gray;
+}
+
+table, th, td {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+th {
+    background-color:rgb(110, 160, 160); 
+    color: floralwhite;
+    width:30%;
+}
+tr {
+    background-color: white;
+}
+
+.wrapper2{
+    margin: auto;
+    width: 75%;
+    max-width: 600px;
+    min-width:500px;
+    height: 550px;
+    background: lightcyan;
+    border-radius: 10px;
     color: gray;
 }
 
