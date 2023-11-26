@@ -10,135 +10,149 @@
 </head>
 <body>
     <div class="wrapper">
-        <form name = "SignUp">
-
+        <form action="Registration.php" method="post">
             <div class="image">
                 <img src="PawSalon.png" alt="Icon" class="Icon">
             </div>    
-
             <h1>Sign Up</h1>
-            
+
             <div class="input-box">
                 <div class="input-field">
-                        <i class='bx bx-user'></i>
-                        <input type="text" placeholder="First Name" required style="width: 475px; height: 25px;">
-                        
+                    <i class='bx bx-user'></i>
+                    <input type="text" name="first" placeholder="First Name" required style="width: 475px; height: 25px;">                        
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <i class='bx bx-user'></i>
-                        <input type="text" placeholder="Last Name" required style="width: 475px; height: 25px;">
-                        
+                    <i class='bx bx-user'></i>
+                    <input type="text" name="last" placeholder="Last Name" required style="width: 475px; height: 25px;">                        
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <i class='bx bxs-building-house' ></i>
-                        <input type="text" placeholder="Address" required style="width: 475px; height: 25px;">
-                        
+                    <i class='bx bxs-building-house' ></i>
+                    <input type="text" name="address" placeholder="Address" required style="width: 475px; height: 25px;">                        
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <i class='bx bx-phone' ></i>
-                        <input type="text" placeholder="Phone 888-888-8888" required style="width: 475px; height: 25px;"> 
+                    <i class='bx bx-phone' ></i>
+                    <input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Phone 888-888-8888" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <i class='bx bxs-envelope' ></i>
-                        <input type="text" placeholder="Email" required style="width: 475px; height: 25px;">
-                        
+                    <i class='bx bxs-envelope' ></i>
+                    <input type="email" name="email" placeholder="Email" required style="width: 475px; height: 25px;">                        
+                </div>
+            </div>
+            <div><?php echo $pwErr; ?></div>
+            <div class="input-box">
+                <div class="input-field">                    
+                    <i class='bx bxs-lock-alt' ></i>                    
+                    <input type="password" name="password" placeholder="Password" required style="width: 475px; height: 25px;">
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <i class='bx bxs-lock-alt' ></i>
-                        <input type="text" placeholder="Password" required style="width: 475px; height: 25px;">
-                </div>
-            </div>
-            <div class="input-box">
-                <div class="input-field">
-                        <i class='bx bxs-lock-alt' ></i>
-                        <input type="text" placeholder="Confirm Password" required style="width: 475px; height: 25px;">               
+                    <i class='bx bxs-lock-alt' ></i>
+                    <input type="password" name="password_confirmation" placeholder="Confirm Password" required style="width: 475px; height: 25px;">               
                 </div>
             </div>
             <br/>
 
-            <button type="submit" class="btn" style="margin-left:0px; width: 475px; height: 25px;">Complete Registration</button>
+            <button type="submit" name="submit" class="btn" style="margin-left:0px; width: 475px; height: 25px;">Complete Registration</button>
             <br/>
             <h2>Already have an account?</h2>
-            <h2> Click below to login.</h2>
-            <button onclick="location.href='login.html'" type="submit" class="btn" style="margin-left:90px; width: 300px; height: 25px;">Login</button>
-            
+            <h2> Click below to login.</h2>                        
         </form>
-    </div>
+        <button href="./Login.php" class="btn" style="margin-left:90px; width: 300px; height: 25px;">Login</button>
+    </div>    
 </body>
 </html>
 
 <?php
 
+$first = $last = $address = $phone = $email = $password = $password_confirmation = "";
+$pwErr = "Hello";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    
-}
 
-function emptyInput()
-{
-    $result = false;
-    if (empty($this->name) ||
-        empty($this->email) ||
-        empty($this->phone) ||
-        empty($this->address) ||
-        empty($this->password) ||
-        empty($this->password_confirmation)) 
-    {
-        $result = true; 
-    }         
-    return $result;        
-}
+    $first = test_input($_POST["first"]);
+    $last = test_input($_POST["last"]);
+    $address = test_input($_POST["address"]);
+    $phone = test_input($_POST["phone"]);
+    $email = test_input($_POST["email"]);    
+    $password = test_input($_POST["password"]);   
+    $password_confirmation = test_input($_POST["password_confirmation"]);
 
-function invalidCharacters($input)
-{
-    $result;
-    if (!preg_match("/^[a-zA-Z0-9]*$/", $input)) {
-        $result = false;
+    // DB connection
+    $host = "localhost";
+    $dbname = "PawSalon";
+    $username = "root";
+    $pw = "root";
+
+    $mysqli = new mysqli($host, $username, $pw, $dbname);
+
+    if ($mysqli->connect_error) {
+        die("Connection Error: " . $mysqli->connect_error);
     }
-    else 
+
+    $stmt = $mysqli->prepare("INSERT INTO Customer (CustFirst, CustLast, Email, Address, Phone, Active, Password)
+            VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssis", $CustFirst, $CustLast, $Email, $Address, $Phone, $Active, $Password);
+
+    $CustFirst = $first;
+    $CustLast = $last;
+    $Email = $email;
+    $Address = $address;
+    $Phone = $phone;
+    $Active = 1;
+    $Password = $password;
+    $stmt->execute();
+
+    $stmt->close();
+    $mysqli->close();
+
+    // Redirect to Login
+}
+
+function test_input($data) 
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+ }
+
+function validCharacters($input, $error)
+{
+    if (!preg_match("/^[a-zA-Z0-9]*$/", $input))
     {
-        $result = true;
+        $error = "Only letters and numbers allowed";
+    }
+    return $error;
+}
+
+function invalidEmail($email)
+{
+    $result = true;
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+    {
+        $result = false;
     }
     return $result;
 }
 
-function invalidEmail()
+function pwdMatch($password, $password_confirmation) 
 {
-    $result;
-    if (!filter_var($this->$email, FILTER_VALIDATE_EMAIL))
+    $result = true;
+    if ($password !== $password_confirmation)
     {
         $result = false;
     }
-    else 
-    {
-        $result = true;
-    }
     return $result;
 }
-
-function pwdMatch() 
-{
-    $result;
-    if ($this->$password !== $this->$password_confirmation)
-    {
-        $result = false;
-    }
-    else 
-    {
-        $result = true;
-    }
-    return $result;
-}
-
 
 ?>
