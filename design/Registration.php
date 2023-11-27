@@ -1,5 +1,5 @@
 <?php
-
+include("../database/dbConfig.php");
 $first = $last = $address = $phone = $email = $password = $password_confirmation = "";
 $pwMatchError = ""; $pwDontMatch = false;
 
@@ -17,17 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     // if passwords match then create new account
     if(pwdMatch($password, $password_confirmation))
     {
-         // DB connection
-        $host = "localhost";
-        $dbname = "PawSalon";
-        $username = "root";
-        $pw = "root";
-
-        $mysqli = new mysqli($host, $username, $pw, $dbname);
-
-        if ($mysqli->connect_error) {
-            die("Connection Error: " . $mysqli->connect_error);
-        }
 
         $stmt = $mysqli->prepare("INSERT INTO Customer (CustFirst, CustLast, Email, Address, Phone, Active, Password)
                 VALUES (?, ?, ?, ?, ?, ?, ?)");

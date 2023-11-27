@@ -1,3 +1,6 @@
+<?php
+	include('session.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,10 +14,10 @@
         <div class="main">
             <img src="PawSalonIcon.png" class="rounded-circle" width="150">
             <img src="PawSalon.png" class="rounded-circle" width="350">
-            <h1>Customer Profile</h1>
+            <h1>Welcome <?php echo $login_session; ?></h1>
             <div class="topbar">
                 <h2>Customer Support: 254-323-3421</h2>
-                <a href="Home.php">Logout</a>
+                <a href="logout.php">Logout</a>
                 <a href="Contact.php">Contact Us</a>
                 <a href="Gallery.php">Gallery</a>
                 <a href="Appointments.php">Appointments</a>
