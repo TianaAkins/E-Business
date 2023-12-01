@@ -11,11 +11,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     $message = "";
 	
     // Check if credentials are valid
-	$stmt = "Select * from 'customer' where Email = '$email' and Password = '$password'";
+	$stmt = "Select * from Customer where Email = '$email' and Password = '$password'";
 	$result = $mysqli->query($stmt);
 		
-	if($result->num_rows > 0) {
-		$_SESSION['login_user'] = $email;
+	if($result->num_rows > 0)
+    {
+         while($row = $result->fetch_assoc())
+        {
+    	    $_SESSION['first_name'] = $row["CustFirst"];
+    	    $_SESSION['last_name'] = $row["CustLast"];
+    	    $_SESSION['address'] = $row["Address"];
+    	    $_SESSION['phone'] = $row["Phone"];
+    	    $_SESSION['email'] = $row["Email"];
+        }        
 		header("Location: customerprofile.php");
 	}
 	else {
@@ -54,7 +62,7 @@ function test_input($data)
 
             <h1>Login</h1>
 
-            <div><?php if ($invalidCredentials) echo $message ?></div>
+            <div><?php if ($invalidCredentials) echo $message; ?></div>
             
             <div class="input-box">
                 <div class="input-field">
