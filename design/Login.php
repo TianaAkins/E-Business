@@ -7,21 +7,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	$email = test_input($_POST["email"]);
 	$password = test_input($_POST["password"]);
+    $invalidCredentials = false;
+    $message = "";
 	
+    // Check if credentials are valid
 	$stmt = "Select * from 'customer' where Email = '$email' and Password = '$password'";
-	echo $stmt;
-	$result = mysqli_query($mysqli, $stmt);
-
+	$result = $mysqli->query($stmt);
 		
-	if($result) {
-		session_register("email");
+	if($result->num_rows > 0) {
 		$_SESSION['login_user'] = $email;
 		header("Location: customerprofile.php");
-		die();
 	}
-	else{
-		echo "Invalid email or password";
-		}
+	else {
+        $invalidCredentials = true;
+		$message = "Invalid email or password";
+    }
 	
 }
 
@@ -53,6 +53,8 @@ function test_input($data)
             </div>    
 
             <h1>Login</h1>
+
+            <div><?php if ($invalidCredentials) echo $message ?></div>
             
             <div class="input-box">
                 <div class="input-field">

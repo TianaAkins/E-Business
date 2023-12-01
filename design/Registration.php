@@ -32,7 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $stmt->execute();
 
         $stmt->close();
-        $mysqli->close();
 
         // Redirect to Login    
     }
