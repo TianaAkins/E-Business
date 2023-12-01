@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,10 +14,10 @@
         <div class="main">
             <img src="PawSalonIcon.png" class="rounded-circle" width="150">
             <img src="PawSalon.png" class="rounded-circle" width="350">
-            <h1>Customer Profile</h1>
+            <h1>Welcome <?php echo $login_session; ?></h1>
             <div class="topbar">
-                <h2>Customer Support: 254-323-3421</h2>
-                <a href="Home.php">Logout</a>
+                <h2>Hello <?php echo $_SESSION['first_name'] ?></h2>
+                <a href="logout.php">Logout</a>
                 <a href="Contact.php">Contact Us</a>
                 <a href="Gallery.php">Gallery</a>
                 <a href="Appointments.php">Appointments</a>
@@ -63,23 +66,23 @@
             <table>
                 <tr>
                   <th>First Name</th>
-                  <td>John</td>
+                  <td><?php echo $_SESSION['first_name']; ?></td>
                 </tr>
                 <tr>
                   <th>Last Name</th>
-                  <td>Doe</td>
+                  <td><?php echo $_SESSION['last_name']; ?></td>
                 </tr>
                 <tr>
                   <th>Address</th>
-                  <td>1234 Water Street</td>
+                  <td><?php echo $_SESSION['address']; ?></td>
                 </tr>
                 <tr>
                     <th>Phone</th>
-                    <td>123-423-3422</td>
+                    <td><?php echo $_SESSION['phone']; ?></td>
                 </tr>
                 <tr>
                     <th>Email</th>
-                    <td>johndoe@tamuct.edu</td>
+                    <td><?php echo $_SESSION['email']; ?></td>
                 </tr>
               </table>
         </div> 

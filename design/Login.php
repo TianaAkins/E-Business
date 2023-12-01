@@ -1,3 +1,47 @@
+<?php
+ob_start();
+session_start();
+include("../database/dbConfig.php");
+
+if($_SERVER["REQUEST_METHOD"] == "POST")
+{
+	$email = test_input($_POST["email"]);
+	$password = test_input($_POST["password"]);
+    $invalidCredentials = false;
+    $message = "";
+	
+    // Check if credentials are valid
+	$stmt = "Select * from Customer where Email = '$email' and Password = '$password'";
+	$result = $mysqli->query($stmt);
+		
+	if($result->num_rows > 0)
+    {
+         while($row = $result->fetch_assoc())
+        {
+    	    $_SESSION['first_name'] = $row["CustFirst"];
+    	    $_SESSION['last_name'] = $row["CustLast"];
+    	    $_SESSION['address'] = $row["Address"];
+    	    $_SESSION['phone'] = $row["Phone"];
+    	    $_SESSION['email'] = $row["Email"];
+        }        
+		header("Location: customerprofile.php");
+	}
+	else {
+        $invalidCredentials = true;
+		$message = "Invalid email or password";
+    }
+	
+}
+
+function test_input($data) 
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}		
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,32 +54,34 @@
 </head>
 <body>
     <div class="wrapper">
-        <form name = "Login">
+        <form name = "Login" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
             <div class="image">
                 <img src="PawSalon.png" alt="Icon" class="Icon">
             </div>    
 
             <h1>Login</h1>
+
+            <div><?php if ($invalidCredentials) echo $message; ?></div>
             
             <div class="input-box">
                 <div class="input-field">
                         <i class='bx bx-user'></i>
-                        <input type="text" placeholder="Email" required style="width: 475px; height: 25px;">
+                        <input type="text" name="email" placeholder="Email" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
                         <i class='bx bx-user'></i>
-                        <input type="text" placeholder="Password" required style="width: 475px; height: 25px;">
+                        <input type="text" name="password" placeholder="Password" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
 
             <br/>
 
-            <button type="submit" class="btn" style="margin-left:0px; width: 475px; height: 25px;">Login</button>
+            <button type="submit" name="submit" class="btn" style="margin-left:0px; width: 475px; height: 25px;">Login</button>
             <h2>Don't have an account?</h2>
             <h2> Click below to register.</h2>
             <button onclick="location.href='Registration.php'" type="submit" class="btn" style="margin-left:90px; width: 300px; height: 25px;">Register</button>
