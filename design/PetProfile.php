@@ -1,3 +1,46 @@
+<?php
+    session_start();
+	include("../database/dbConfig.php");
+	
+	$sql = "Select PetName, PetType, Breed, HairType from pet where CustomerID = $_SESSION['custID']";
+	$all_pets = $mysqli-> query($sql);
+	
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+		
+		$petName = test_input($_POST['petName']);
+		$petType = test_input($_POST['petType']);
+		$breed = test_input($_POST['breed']);
+		$hairType = test_input($_POST['hairType']);
+		$weight = test_input($_POST['weight']);
+		$customerID = $_SESSION['custID'];
+	
+		$stmt = $mysqli->prepare("insert into pet(PetName, PetType, Breed, HairType, Weight, CustomerID)
+			values(?,?,?,?,?,?)");
+		$stmt->bind_param("ssssii", $petName, $petType, $breed, $hairType, $weight, $customerID);
+		$stmt->execute();
+		$stmt->close();
+	}
+	
+	function test_input($data) 	
+	{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+	}
+	
+	function get_id($email)
+	{
+		
+		include("../database/dbConfig.php");
+		
+		$sql= "select CustomerID from customer where email='$email'";
+		$result = $mysqli-> query($sql);
+		$row = $result->fetch_assoc();
+		return $row["CustomerID"];
+	}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,44 +68,53 @@
             <hr>
         </div>
         <div class="wrapper">
+		<form name = "addPet" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
             <h3>Add Pet Profile</h3>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Pet Name" required style="width: 475px; height: 25px;"> 
+                        <input type="text" name="petName" placeholder="Pet Name" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Pet Type" required style="width: 475px; height: 25px;">
+                        <input type="text" name="petType" placeholder="Pet Type" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Breed" required style="width: 475px; height: 25px;">
+                        <input type="text" name ="breed" placeholder="Breed" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Hair Type" required style="width: 475px; height: 25px;"> 
+                        <input type="text" name="hairType" placeholder="Hair Type" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Weight" required style="width: 475px; height: 25px;">
+                        <input type="text" name="weight" placeholder="Weight" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <br/>
             <button type="submit" class="btn" style="margin-left:37px; width: 475px; height: 25px;">Add</button>
+		</form>
         </div>
         <hr>
         <div class="wrapper2">
             <h3><label for="Pet">Select Pet: </label>
                 <select name="Pets" id="Pets">
-                  <option value="Max">Max</option>
-                  <option value="Sally">Sally</option>
+                   <?php 
+					while ($pet = mysqli_fetch_array($all_pets,MYSQLI_ASSOC)):; 
+					?>
+						<option value="<?php echo $pet["PetName"];?>">
+						<?php echo $category["Category_Name"];?>
+						</option>
+						<?php 
+						endwhile; 
+						?>
                 </select>
             </h3>
             <input type="submit" value="Submit" style="margin-left: 250px; margin-bottom: 10px;" >
@@ -93,36 +145,4 @@
 </body>
 </html>
 
-//code moved from pet model in case it is still helpful
-//Remove if unnecessary
-<?php
-	$servername = "localhost";
-	$username = "root";
-	$dbpassword = "root";
-	$database = "pawsalon"
-
-	$CustomerID = $_POST['CustomerID'];
-	$PetNum = $_POST['PetNum'];
-	$PetName = $_POST['PetName'];
-	$PetType = $_POST['PetType'];
-	$Breed = $_POST['Breed'];
-	$HairType = $_POST['HairType'];
-	$Weight = $_POST['Weight'];
-
-	//database connection
-	$conn = new mysqli($servername, $username, $dbpassword, $database);
-	if($conn->connect_error){
-		die('Connection Failed : '.$conn->connect_error);
-	}else{
-		$stmt = $conn->prepare("insert into pet(CustomerID, PetNum, PetName, PetType, Breed, HairType, Weight)
-			values(?,?,?,?,?,?,?)");
-		$stmt->bind_param("iissssi", $CustomerID, $PetNum, $PetName, $PetType, $Breed, $HairType, $Weight);
-		$stmt->execute();
-		echo "Profile Updated";
-		$stmt->close();
-		$conn->close();
-	}
-
 	
-	
-?>

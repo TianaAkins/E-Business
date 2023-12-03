@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $stmt->close();
 
         // Redirect to Login    
+		header("Location: Login.php");
     }
     // else passwords didn't match and send back form 
     else 
