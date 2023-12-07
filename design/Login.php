@@ -1,5 +1,4 @@
 <?php
-ob_start();
 session_start();
 include("../database/dbConfig.php");
 
@@ -23,6 +22,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     	    $_SESSION['address'] = $row["Address"];
     	    $_SESSION['phone'] = $row["Phone"];
     	    $_SESSION['email'] = $row["Email"];
+			$_SESSION['custID']=$row["CustomerID"];
         }        
 		header("Location: customerprofile.php");
 	}

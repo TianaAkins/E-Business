@@ -1,3 +1,63 @@
+<?php
+    session_start();
+	include("../database/dbConfig.php");
+	include("../models/pet.php");
+	
+	$sql = "Select PetName, PetType, Breed, HairType, Weight from pet where CustomerID = {$_SESSION['custID']}";
+	$result = $mysqli-> query($sql);
+	$pets = mysqli_fetch_all($result,MYSQLI_ASSOC);
+	$pet_selected=false;
+	
+	$pet_list=array();
+	foreach($pets as $pet)
+	{
+		$current_pet = new Pet($pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"]);
+		$pet_list["{$current_pet->getName()}"] = $current_pet;
+	}
+	
+	if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_pet']))
+	{
+		$selectedKey = $_POST['selected_pet']; 
+		$selectedPet=$pet_list["{$selectedKey}"];
+		$pet_selected=true;
+	}
+	
+	if ($_SERVER["REQUEST_METHOD"] == "POST" && formComplete()) {
+		
+		$petName = test_input($_POST['petName']);
+		$petType = test_input($_POST['petType']);
+		$breed = test_input($_POST['breed']);
+		$hairType = test_input($_POST['hairType']);
+		$weight = test_input($_POST['weight']);
+		$customerID = $_SESSION['custID'];
+	
+		$stmt = $mysqli->prepare("insert into pet(PetName, PetType, Breed, HairType, Weight, CustomerID)
+			values(?,?,?,?,?,?)");
+		$stmt->bind_param("ssssii", $petName, $petType, $breed, $hairType, $weight, $customerID);
+		$stmt->execute();
+		$stmt->close();
+	}
+		
+	function test_input($data) 	
+	{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+	}
+	
+	function formComplete()
+	{
+		$complete=false;
+		if(isset($_POST['petName']) && isset($_POST['petType']) && isset($_POST['breed']) 
+			&& isset($_POST['hairType']) && isset($_POST['weight']))
+			{
+				$complete=true;
+			}
+		return $complete;
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,104 +85,80 @@
             <hr>
         </div>
         <div class="wrapper">
+		<form name="addPet" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
             <h3>Add Pet Profile</h3>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Pet Name" required style="width: 475px; height: 25px;"> 
+                        <input type="text" name="petName" placeholder="Pet Name" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Pet Type" required style="width: 475px; height: 25px;">
+                        <input type="text" name="petType" placeholder="Pet Type" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Breed" required style="width: 475px; height: 25px;">
+                        <input type="text" name ="breed" placeholder="Breed" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Hair Type" required style="width: 475px; height: 25px;"> 
+                        <input type="text" name="hairType" placeholder="Hair Type" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Weight" required style="width: 475px; height: 25px;">
+                        <input type="text" name="weight" placeholder="Weight" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <br/>
             <button type="submit" class="btn" style="margin-left:37px; width: 475px; height: 25px;">Add</button>
+		</form>
         </div>
         <hr>
         <div class="wrapper2">
+		<form name="selectPet" method="post" action="<?php echo $_SERVER['PHP_SELF']?>" >
             <h3><label for="Pet">Select Pet: </label>
-                <select name="Pets" id="Pets">
-                  <option value="Max">Max</option>
-                  <option value="Sally">Sally</option>
+                <select name="selected_pet">
+                   <?php 
+					foreach($pet_list as $pet): 
+					?>
+						<option value="<?php echo $pet->getName(); ?>">
+						<?php echo $pet->getName();?>
+						</option>
+						<?php endforeach;?>
                 </select>
             </h3>
-            <input type="submit" value="Submit" style="margin-left: 250px; margin-bottom: 10px;" >
-            <table>
-                <tr>
-                  <th>Pet Name</th>
-                  <td>Max</td>
-                </tr>
-                <tr>
-                  <th>Pet Type</th>
-                  <td>Dog</td>
-                </tr>
-                <tr>
-                  <th>Breed</th>
-                  <td>Pitbull</td>
-                </tr>
-                <tr>
-                    <th>Hair Type</th>
-                    <td>Short</td>
-                </tr>
-                <tr>
-                    <th>Weight</th>
-                    <td>40 lbs.</td>
-                </tr>
-              </table>
-        </div>    
+            <button type="submit"  value="Submit" style="margin-left: 250px; margin-bottom: 10px;" >Submit</button>
+		</form>
+			<table>
+				<tr>
+					<th>Pet Name</th>
+					<td><?php if($pet_selected) {echo $selectedPet->getName();} ?></td>
+				</tr>
+				<tr>
+					<th>Pet Type</th>
+					<td><?php if($pet_selected) {echo $selectedPet->getPetType();} ?></td>
+				</tr>
+				<tr>
+					<th>Breed</th>
+					<td><?php if($pet_selected) {echo $selectedPet->getBreed();} ?></td>
+				</tr>
+				<tr>
+					<th>Hair Type</th>
+					<td><?php if($pet_selected) {echo $selectedPet->getHairType();} ?></td>
+				</tr>
+				<tr>
+					<th>Weight</th>
+					<td><?php if($pet_selected) {echo $selectedPet->getWeight();} ?></td>
+				</tr>
+			</table>
+        </div>
     </div>
 </body>
 </html>
-
-//code moved from pet model in case it is still helpful
-//Remove if unnecessary
-<?php
-	$servername = "localhost";
-	$username = "root";
-	$dbpassword = "root";
-	$database = "pawsalon"
-
-	$CustomerID = $_POST['CustomerID'];
-	$PetNum = $_POST['PetNum'];
-	$PetName = $_POST['PetName'];
-	$PetType = $_POST['PetType'];
-	$Breed = $_POST['Breed'];
-	$HairType = $_POST['HairType'];
-	$Weight = $_POST['Weight'];
-
-	//database connection
-	$conn = new mysqli($servername, $username, $dbpassword, $database);
-	if($conn->connect_error){
-		die('Connection Failed : '.$conn->connect_error);
-	}else{
-		$stmt = $conn->prepare("insert into pet(CustomerID, PetNum, PetName, PetType, Breed, HairType, Weight)
-			values(?,?,?,?,?,?,?)");
-		$stmt->bind_param("iissssi", $CustomerID, $PetNum, $PetName, $PetType, $Breed, $HairType, $Weight);
-		$stmt->execute();
-		echo "Profile Updated";
-		$stmt->close();
-		$conn->close();
-	}
-
 	
-	
-?>
