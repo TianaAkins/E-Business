@@ -1,5 +1,50 @@
 <?php
-    session_start();
+ob_start();
+session_start();
+include("../database/dbConfig.php");
+
+//Fill variables with session info and determine CustomerID.
+$first = $_SESSION['first_name'];
+$last = $_SESSION['last_name'];
+$address = $_SESSION['address'];
+$phone = $_SESSION['phone'];
+$email = $_SESSION['email'];
+$stmt = "SELECT CustomerID FROM Customer WHERE CustFirst = '$first' AND CustLast = '$last' AND Address = '$address' AND Phone = '$phone' AND Email = '$email'";
+$result = $mysqli->query($stmt);
+
+while($row = $result->fetch_assoc())
+{
+    $customerID = $row["CustomerID"];
+}
+
+//Update database and session with user-input info, then reload page.  
+if($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    $first = test_input($_POST["first"]);
+    $last = test_input($_POST["last"]);
+    $address = test_input($_POST["address"]);
+    $phone = test_input($_POST["phone"]);
+    $email = test_input($_POST["email"]);
+    
+    $stmt = "UPDATE Customer SET CustFirst = '$first', CustLast = '$last', Address = '$address', Phone = '$phone', Email = '$email' WHERE CustomerID = '$customerID'";
+    $mysqli->query($stmt);
+
+    $_SESSION['first_name'] = $first;
+    $_SESSION['last_name'] = $last;
+    $_SESSION['address'] = $address;
+    $_SESSION['phone'] = $phone;
+    $_SESSION['email'] = $email;
+    
+    header("Location: CustomerProfile.php");
+}
+
+function test_input($data) 
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,37 +73,39 @@
             <hr>
         </div>
         <div class="wrapper">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
             <h3>Update Customer Profile</h3>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="First Name" required style="width: 475px; height: 25px;"> 
+                        <input type="text" name="first" placeholder="First Name" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Last Name" required style="width: 475px; height: 25px;">
+                        <input type="text" name="last" placeholder="Last Name" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Address" required style="width: 475px; height: 25px;">
+                        <input type="text" name="address" placeholder="Address" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Phone 888-888-8888" required style="width: 475px; height: 25px;"> 
+                        <input type="text" name="phone" placeholder="Phone 888-888-8888" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="xxx-xxx-xxxx" required style="width: 475px; height: 25px;"> 
                 </div>
             </div>
             <div class="input-box">
                 <div class="input-field">
-                        <input type="text" placeholder="Email" required style="width: 475px; height: 25px;">
+                        <input type="text" name="email" placeholder="Email" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
             <br/>
-            <button type="submit" class="btn" style="margin-left:37px; width: 475px; height: 25px;">Update</button>
+            <button type="submit" class="btn" name="submit" style="margin-left:37px; width: 475px; height: 25px;">Update</button>
+        </form>
         </div>   
         <hr>
         <div class="wrapper2">
