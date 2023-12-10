@@ -9,22 +9,12 @@
     	header("Location: Login.php");
 	}
 	
-	$sql = "Select PetName, PetType, Breed, HairType, Weight from pet where CustomerID = {$_SESSION['custID']}";
-	$result = $mysqli-> query($sql);
-	$pets = mysqli_fetch_all($result,MYSQLI_ASSOC);
 	$pet_selected=false;
-	
-	$pet_list=array();
-	foreach($pets as $pet)
-	{
-		$current_pet = new Pet($pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"]);
-		$pet_list["{$current_pet->getName()}"] = $current_pet;
-	}
-	
+
 	if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_pet']))
 	{
 		$selectedKey = $_POST['selected_pet']; 
-		$selectedPet=$pet_list["{$selectedKey}"];
+		$selectedPet=$_SESSION['petList']["{$selectedKey}"];
 		$pet_selected=true;
 	}
 	
@@ -35,7 +25,7 @@
 		$breed = test_input($_POST['breed']);
 		$hairType = test_input($_POST['hairType']);
 		$weight = test_input($_POST['weight']);
-		$customerID = $_SESSION['custID'];
+		$customerID = $_SESSION['custID'];                     
 	
 		$stmt = $mysqli->prepare("insert into pet(PetName, PetType, Breed, HairType, Weight, CustomerID)
 			values(?,?,?,?,?,?)");

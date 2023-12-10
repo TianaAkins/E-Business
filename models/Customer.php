@@ -2,26 +2,30 @@
 
 class Customer {
 
+	private $id;
     private $first;
     private $last;
     private $address;
     private $phone;
     private $email;       
-    private $password;
-    private $password_confirmation;
   
-    public function __construct($first, $last, $address, $phone, $email, $password, $password_confirmation) 
+    public function __construct($id, $first, $last, $address, $phone, $email) 
     {
-        $this->first = $first;
+        $this->id = $id;
+		$this->first = $first;
         $this->last = $last;
         $this->address = $address;
         $this->phone = $phone;
         $this->email = $email;        
-        $this->password = $password;
-        $this->password_confirmation = $password_confirmation;
+
     }
 
     // Setter Methods
+	function setID($id)
+	{
+		$this->id = $id;
+	}
+	
     function setFirst($first)
     {
         $this->first = $first;
@@ -46,11 +50,6 @@ class Customer {
     {
         $this->email = $email;
     }    
-
-    function setPassword($password)
-    {
-        $this->password = $password;
-    }
 
     // Getter Methods 
     function getFirst()
@@ -77,5 +76,10 @@ class Customer {
     {
         return $this->email;
     }    
+	
+	function getID()
+	{
+		return $this->id;
+	}
 
 }
