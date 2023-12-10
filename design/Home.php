@@ -33,10 +33,10 @@
         </center>
 
         <center>   
-        <img src="home1.jpg" width="350" height="350" style="border-radius: 25px; ">
-        <img src="home2.jpg" width="350" height="350" style="border-radius: 25px;">  
-        <img src="home3.jpg" width="350" height="350" style="border-radius: 25px;">  
-        <img src="home4.jpg" width="350" height="350" style="border-radius: 25px;">   
+        <img src="images/home1.jpg" width="350" height="350" style="border-radius: 25px; ">
+        <img src="images/home2.jpg" width="350" height="350" style="border-radius: 25px;">  
+        <img src="images/home3.jpg" width="350" height="350" style="border-radius: 25px;">  
+        <img src="images/home4.jpg" width="350" height="350" style="border-radius: 25px;">   
         <hr>
         </center>
 
