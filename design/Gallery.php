@@ -14,7 +14,7 @@
             <h1>Gallery</h1>
             <div class="topbar">
                 <h2>Customer Support: 254-323-3421</h2>
-                <a href="Home.php">Logout</a>
+                <a href="logout.php">Logout</a>
                 <a href="Contact.php">Contact Us</a>
                 <a href="Gallery.php">Gallery</a>
                 <a href="Appointments.php">Appointments</a>
