@@ -3,6 +3,12 @@ ob_start();
 session_start();
 include("../database/dbConfig.php");
 
+//Reroutes user to login if not logged in.
+if($_SESSION['first_name'] == "")
+{
+    header("Location: Login.php");
+}
+
 //Fill variables with session info and determine CustomerID.
 $first = $_SESSION['first_name'];
 $last = $_SESSION['last_name'];
@@ -57,12 +63,14 @@ function test_input($data)
 <body>
     <div class="container">
         <div class="main">
+            <a href="Home.php">
             <img src="PawSalonIcon.png" class="rounded-circle" width="150">
             <img src="PawSalon.png" class="rounded-circle" width="350">
+            </a>
             <h1>Welcome <?php echo $login_session; ?></h1>
             <div class="topbar">
                 <h2>Hello <?php echo $_SESSION['first_name'] ?></h2>
-                <a href="logout.php">Logout</a>
+                <a href="logout.php">Login/Logout</a>
                 <a href="Contact.php">Contact Us</a>
                 <a href="Gallery.php">Gallery</a>
                 <a href="Appointments.php">Appointments</a>

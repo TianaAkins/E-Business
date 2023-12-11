@@ -57,7 +57,9 @@ function test_input($data)
         <form name = "Login" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
             <div class="image">
+                <a href="Home.php">
                 <img src="PawSalon.png" alt="Icon" class="Icon">
+                </a>
             </div>    
 
             <h1>Login</h1>
