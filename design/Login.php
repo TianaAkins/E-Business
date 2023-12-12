@@ -31,33 +31,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		//Create customer model for session
 		$customer = new Customer($_SESSION['custID'], $_SESSION['first_name'], $_SESSION['last_name'], $_SESSION['address'], $_SESSION['phone'], $_SESSION['email']);
 		$_SESSION['customer']=$customer;
-		
-		//Query for pets associated with customer profile
-		$sql = "Select * from pet where CustomerID = {$_SESSION['custID']}";
-		$pet_result = $mysqli-> query($sql);
-		$pets = mysqli_fetch_all($pet_result,MYSQLI_ASSOC);
-		
-		//Create array with pet models for session
-		$pet_list=array();
-		foreach($pets as $pet)
-		{
-			$current_pet = new Pet($pet["PetID"], $pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"], $_SESSION['customer']);
-			$pet_list["{$current_pet->getName()}"] = $current_pet;
-		} 
-		$_SESSION['petList'] = $pet_list;
-		
-		//Query for all available services
-		$service_sql = "Select * from service";
-		$service_result = $mysqli-> query($service_sql);
-		$services = mysqli_fetch_all($service_result,MYSQLI_ASSOC);
-		
-		//Create service model array
-		$service_list=array();
-		foreach($services as $service){
-			$current_service = new Service($service["ServiceID"], $service["ServiceName"], $service["ServiceCost"]);
-			$service_list["{$current_service->getName()}"] = $current_service;
-		}
-		$_SESSION['services']=$service_list;
 
 		header("Location: customerprofile.php");
 	}

@@ -9,9 +9,9 @@ class Pet {
     private $breed;
     private $hair_type;
     private $weight; 
-	private $customer;
+	private $customerID;
   
-    public function __construct($id, $name, $type, $breed, $hair_type, $weight, $customer) 
+    public function __construct($id, $name, $type, $breed, $hair_type, $weight, $customerID) 
     {
 		$this->id = $id;
         $this->name = $name;
@@ -19,7 +19,7 @@ class Pet {
         $this->breed = $breed;
         $this->hair_type = $hair_type;
 		$this->weight = $weight;
-		$this->customer = $customer;
+		$this->customerID = $customerID;
     }
 
     // Setter Methods
@@ -82,5 +82,10 @@ class Pet {
 	function getID()
     {
 		return $this->id;
-    }   
+    }  
+	
+	function getCustID()
+    {
+		return $this->customerID;
+    }  	
 }

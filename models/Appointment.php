@@ -4,21 +4,21 @@ include("../database/dbConfig.php");
 class Appointment {
 
     private $id;
-    private $customer;
-    private $pet;
-	private $service;
+    private $customerID;
+    public $petID;
+	private $serviceID;
     private $appt_date;
     private $appt_time;
 	private $status;
 	private $payment_status;
 	private $total_cost;
   
-    public function __construct($id, $customer, $pet, $service, $appt_date, $appt_time, $status, $payment_status, $total_cost) 
+    public function __construct($id, $customerID, $petID, $serviceID, $appt_date, $appt_time, $status, $payment_status, $total_cost) 
     {
 		$this->id = $id;
-        $this->customer = $customer;
-        $this->pet = $pet;
-		$this->service = $service;
+        $this->customerID = $customerID;
+        $this->petID = $petID;
+		$this->serviceID = $serviceID;
         $this->appt_date=$appt_date;
         $this->appt_time = $appt_time;
 		$this->status = $status;
@@ -28,19 +28,19 @@ class Appointment {
 	///past appointment - apptid, petName, date, time, service, cost, payment status
 
     // Setter Methods
-    function setCustomer($customer)
+    function setCustomer($customerID)
     {
-        $this->customer = $customer;
+        $this->customerID = $customerID;
     }
 
-    function setPet($pet)
+    function setPetID($petID)
     {
-        $this->pet = $pet;
+        $this->petID = $petID;
     }
 	
-	function setService($service)
+	function setService($serviceID)
     {
-        $this->service = $service;
+        $this->serviceID = $serviceID;
     }
 
     function setDate($appt_date)
@@ -69,19 +69,19 @@ class Appointment {
 	}
 
     // Getter Methods 
-    function getCustomer()
+    function getCustomerID()
     {
-        return $this->customer;
+        return $this->customerID;
     }
 
-    function getPet()
+    function getPetID()
     {
-        return $this->pet;
+        return $this->petID;
     }
 	
-	function getService()
+	function getServiceID()
 	{
-		return $this->service;
+		return $this->serviceID;
 	}
 
     function getApptDate()
