@@ -101,10 +101,11 @@ class Appointment {
 
 	function getPaymentStatus()
 	{
-		if(payment_status==1)
-			echo "Paid";
+		if($this->payment_status=1)
+			$status = "Paid";
 		else
-			echo "Unpaid";
+			$status = "Unpaid";
+		return $status;
 	}
 	
 	function getTotalCost()

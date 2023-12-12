@@ -9,7 +9,7 @@
     	header("Location: Login.php");
 	}
 	
-	$sql = "Select PetName, PetType, Breed, HairType, Weight from pet where CustomerID = {$_SESSION['custID']}";
+	$sql = "Select PetID, PetName, PetType, Breed, HairType, Weight, CustomerID from pet where CustomerID = {$_SESSION['custID']}";
 	$result = $mysqli-> query($sql);
 	$pets = mysqli_fetch_all($result,MYSQLI_ASSOC);
 	$pet_selected=false;

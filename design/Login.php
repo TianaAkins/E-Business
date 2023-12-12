@@ -20,18 +20,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     {
          while($row = $result->fetch_assoc())
         {
+			$_SESSION['custID']=$row["CustomerID"];
     	    $_SESSION['first_name'] = $row["CustFirst"];
     	    $_SESSION['last_name'] = $row["CustLast"];
     	    $_SESSION['address'] = $row["Address"];
     	    $_SESSION['phone'] = $row["Phone"];
     	    $_SESSION['email'] = $row["Email"];
-			$_SESSION['custID']=$row["CustomerID"];
         } 
 		
-		//Create customer model for session
-		$customer = new Customer($_SESSION['custID'], $_SESSION['first_name'], $_SESSION['last_name'], $_SESSION['address'], $_SESSION['phone'], $_SESSION['email']);
-		$_SESSION['customer']=$customer;
-
 		header("Location: customerprofile.php");
 	}
 	else {

@@ -6,8 +6,30 @@ include("../models/customer.php");
 include("../models/appointment.php");
 include("../models/service.php");
 
-$pet_list = getPetList();
-$service_list = getServiceList();
+//Query for pets associated with customer profile
+$pet_sql = "Select * from pet where CustomerID = {$_SESSION['custID']}";
+$pet_result = $mysqli-> query($pet_sql);
+$pets = mysqli_fetch_all($pet_result,MYSQLI_ASSOC);
+		
+//Create array with pet models for session
+$pet_list=array();
+foreach($pet_list as $pet)
+{
+	$current_pet = new Pet($pet["PetID"], $pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"]);
+	$pet_list["{$current_pet->getName()}"] = $current_pet;
+} 
+
+//Query for all available services
+$service_sql = "Select * from service";
+$service_result = $mysqli-> query($service_sql);
+$services = mysqli_fetch_all($service_result,MYSQLI_ASSOC);
+		
+//Create service model array
+$service_list=array();
+foreach($service_list as $service){
+	$current_service = new Service($service["ServiceID"], $service["ServiceName"], $service["ServiceCost"]);
+	$service_list["{$current_service->getName()}"] = $current_service;
+}
 
 if($_SERVER["REQUEST_METHOD"] == "POST" && formComplete())
 {
@@ -80,12 +102,11 @@ function formComplete()
 	return $complete;
 	}
 	
-function getPet($petID)
+function getPetName($pet_list, $petID)
 {
-	$pet_list = getPetList();
 	foreach($pet_list as $pet){
 		if($pet->getID()==$petID){
-			$selected_pet = $pet;
+			$selected_pet = $pet->getName();
 			return $selected_pet;
 		}
 		else{
@@ -94,26 +115,8 @@ function getPet($petID)
 	}
 }
 
-function getPetList(){
-	include("../database/dbConfig.php");
-	//Query for pets associated with customer profile
-	$sql = "Select * from pet where CustomerID = {$_SESSION['custID']}";
-	$pet_result = $mysqli-> query($sql);
-	$pets = mysqli_fetch_all($pet_result,MYSQLI_ASSOC);
-		
-	//Create array with pet models for session
-	$pet_list=array();
-	foreach($pet_list as $pet)
-	{
-		$current_pet = new Pet($pet["PetID"], $pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"], $_SESSION['customer']);
-		$pet_list["{$current_pet->getName()}"] = $current_pet;
-	} 
-	return $pet_list;
-}
-
-function getService($serviceID)
+function getServiceName($service_list, $serviceID)
 {
-	$service_list = getServiceList();
 	foreach($service_list as $service){
 		if($service->getID()==$serviceID){
 			$selected_service = $service;
@@ -125,21 +128,6 @@ function getService($serviceID)
 	}
 }
 
-function getServiceList(){
-	include("../database/dbConfig.php");
-	//Query for all available services
-	$service_sql = "Select * from service";
-	$service_result = $mysqli-> query($service_sql);
-	$services = mysqli_fetch_all($service_result,MYSQLI_ASSOC);
-		
-	//Create service model array
-	$service_list=array();
-	foreach($service_list as $service){
-		$current_service = new Service($service["ServiceID"], $service["ServiceName"], $service["ServiceCost"]);
-		$service_list["{$current_service->getName()}"] = $current_service;
-	}
-	return $service_list;
-}
 ?>
 
 <!DOCTYPE html>
@@ -176,11 +164,11 @@ function getServiceList(){
 		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
             <h3>Book Appointment</h3>
             <h3><label for="Pet">Select Pet: </label>
-                <select name="pet_name" id="Pets">
+                <select required name="pet_name" id="Pets">
                   <?php 
 					foreach($pet_list as $pet): 
 					?>
-						<option value="<?php $pet->getName(); ?>">
+						<option value="<?php echo $pet->getName(); ?>">
 						<?php echo $pet->getName();?>
 						</option>
 						<?php endforeach;?>
@@ -199,7 +187,7 @@ function getServiceList(){
             </div>
             <br/>
             <b><label for="Service">Select Service: </label></b>
-                <select name="service" id="Service">
+                <select required name="service" id="Service">
                   <option value="Nail Trim">Nail Trim - $25</option>
                   <option value="Haircut">Haircut - $50</option>
                   <option value="Bath and Brush">Bath & Brush - $75</option>
@@ -215,8 +203,8 @@ function getServiceList(){
         <div class="wrapper2">
             <center>
 			<?php if($has_previous1){
-				$pet=getPet($appointment1->getPetID());
-				$service=getService($appointment1->getServiceID());
+				$petName=getPetName($pet_list, $appointment1->getPetID());
+				$serviceName=getServiceName($service_list, $appointment1->getServiceID());
 				echo 
                 '<h3>Past Appointments</h3>
                 <table>
@@ -226,7 +214,7 @@ function getServiceList(){
                 </tr>
                 <tr>
                   <th>Pet Name</th>
-                  <td>'.$pet->getName().'
+                  <td>'.$petName.'
 					</td>
                 </tr>
                 <tr>
@@ -239,7 +227,7 @@ function getServiceList(){
                 </tr>
                 <tr>
                     <th>Service</th>
-                    <td>'.$service->getName().'</td>
+                    <td>'.$serviceName.'</td>
                 </tr>
                 <tr>
                     <th>Cost</th>
@@ -252,8 +240,8 @@ function getServiceList(){
                 </tr>
 			</table>'; }?>
 			  <?php if($has_previous2){
-				$pet=getPet($appointment2->getPetID());
-				$service=getService($appointment2->getServiceID());
+				$petName=getPetName($pet_list, $appointment2->getPetID());
+				$serviceName=getServiceName($service_list, $appointment2->getServiceID());
 				echo 
                 '<h3>Past Appointments</h3>
                 <table>
@@ -263,7 +251,7 @@ function getServiceList(){
                 </tr>
                 <tr>
                   <th>Pet Name</th>
-                  <td>'.$pet->getName().'
+                  <td>'.$petName.'
 					</td>
                 </tr>
                 <tr>
@@ -276,7 +264,7 @@ function getServiceList(){
                 </tr>
                 <tr>
                     <th>Service</th>
-                    <td>'.$service->getName().'</td>
+                    <td>'.$serviceName.'</td>
                 </tr>
                 <tr>
                     <th>Cost</th>
