@@ -82,7 +82,7 @@ function pwdMatch($password, $password_confirmation)
     <div class="wrapper">
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
             <div class="image">
-                <img src="PawSalon.png" alt="Icon" class="Icon">
+                <a href="Home.php"><img src="images/PawSalon.png" alt="Icon" class="Icon"></a>
             </div>    
             <h1>Sign Up</h1>
 

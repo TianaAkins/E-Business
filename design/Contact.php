@@ -25,6 +25,7 @@
                 <a href="Services.php">Services</a>
                 <a href="PetProfile.php">Pet Profile</a>
                 <a href="CustomerProfile.php">Customer Profile</a>
+                <a href="Home.php">Home</a>
             </div>
             <hr>
         </div>

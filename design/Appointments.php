@@ -32,9 +32,11 @@ if($_SESSION['first_name'] == "")
                 <a href="Services.php">Services</a>
                 <a href="PetProfile.php">Pet Profile</a>
                 <a href="CustomerProfile.php">Customer Profile</a>
+                <a href="Home.php">Home</a>
             </div>
             <hr>
         </div>
+
         <div class="wrapper">
             <h3>Book Appointment</h3>
             <h3><label for="Pet">Select Pet: </label>

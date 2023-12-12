@@ -23,6 +23,7 @@
                 <a href="Services.php">Services</a>
                 <a href="PetProfile.php">Pet Profile</a>
                 <a href="CustomerProfile.php">Customer Profile</a>
+                <a href="Home.php">Home</a>
             </div>
             <hr>
             <center>
@@ -32,7 +33,7 @@
                     <h4>Includes nail trim, file, and buffer.</h4>
                     
                     <hr>
-                    <img src="NailTrim.jpg" width="250">
+                    <img src="images/NailTrim.jpg" width="250">
     
                 </div>
     
@@ -41,7 +42,7 @@
                     <h3>$50.00</h3>
                     <h4>Includes cut and style.</h4>
                     <hr>
-                    <img src="Haircut.jpg" width="250">
+                    <img src="images/Haircut.jpg" width="250">
         
                 </div>
                 <br/>
@@ -53,7 +54,7 @@
                     <h3>$75.00</h3>
                     <h4>Includes deep shampoo and conditioner, blow dry and de-shed.</h4>
                     <hr>
-                    <img src="Bath.jpg" width="250">
+                    <img src="images/Bath.jpg" width="250">
         
                 </div>
     
@@ -62,7 +63,7 @@
                     <h3>$90.00</h3>
                     <h4>Includes nail services, bath, de-shed, haircut, and teeth cleaning.</h4>
                     <hr>
-                    <img src="Teeth.jpg" width="250">
+                    <img src="images/Teeth.jpg" width="250">
         
                 </div>
             </center>
