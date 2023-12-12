@@ -4,24 +4,20 @@ include("../database/dbConfig.php");
 class Appointment {
 
     private $id;
-    private $customerID;
-    public $petID;
-	private $serviceID;
+    public $petName;
+	private $serviceName;
     private $appt_date;
     private $appt_time;
-	private $status;
 	private $payment_status;
 	private $total_cost;
   
-    public function __construct($id, $customerID, $petID, $serviceID, $appt_date, $appt_time, $status, $payment_status, $total_cost) 
+    public function __construct($id, $petName, $serviceName, $appt_date, $appt_time, $payment_status, $total_cost) 
     {
 		$this->id = $id;
-        $this->customerID = $customerID;
-        $this->petID = $petID;
-		$this->serviceID = $serviceID;
+        $this->petName = $petName;
+		$this->serviceName = $serviceName;
         $this->appt_date=$appt_date;
         $this->appt_time = $appt_time;
-		$this->status = $status;
 		$this->payment_status = $payment_status;
 		$this->total_cost = $total_cost;
     }
@@ -33,14 +29,14 @@ class Appointment {
         $this->customerID = $customerID;
     }
 
-    function setPetID($petID)
+    function setPetName($petName)
     {
-        $this->petID = $petID;
+        $this->petName = $petName;
     }
 	
-	function setService($serviceID)
+	function setService($serviceName)
     {
-        $this->serviceID = $serviceID;
+        $this->serviceName = $serviceName;
     }
 
     function setDate($appt_date)
@@ -53,11 +49,6 @@ class Appointment {
         $this->appt_time = $appt_time;
     }    
 
-    function setStatus($status)
-    {
-        $this->status = $status;
-    }    
-	
 	function setPaymentStatus($payment_status)
 	{
 		$this->payment_status = $payment_status;
@@ -69,19 +60,24 @@ class Appointment {
 	}
 
     // Getter Methods 
+	function getID()
+    {
+		return $this->id;
+    }  
+	
     function getCustomerID()
     {
         return $this->customerID;
     }
 
-    function getPetID()
+    function getPetName()
     {
-        return $this->petID;
+        return $this->petName;
     }
 	
-	function getServiceID()
+	function getServiceName()
 	{
-		return $this->serviceID;
+		return $this->serviceName;
 	}
 
     function getApptDate()
@@ -94,14 +90,9 @@ class Appointment {
         return $this->appt_time;
     }
 
-    function getStatus()
-    {
-        return $this->status;
-    }
-
 	function getPaymentStatus()
 	{
-		if($this->payment_status=1)
+		if($this->payment_status==1)
 			$status = "Paid";
 		else
 			$status = "Unpaid";
@@ -112,9 +103,4 @@ class Appointment {
 	{
 		return $this->total_cost;
 	}
-	
-	function getID()
-    {
-		return $this->id;
-    }   
 }

@@ -65,18 +65,33 @@ $appt_result = $mysqli-> query($appt_sql);
 //Displays only if profile has previous appointments related to it
 if($appt_result){
 	
-	$has_previous1 = true;
 	//Create appointment models
-	$row1 = $appt_result -> fetch_assoc();
-	$appointment1 = new Appointment($row1["AppointmentID"], $row1["CustomerID"], $row1["PetID"], $row1["ServiceID"], $row1["ApptDate"], $row1["ApptTime"],
-		$row1["ApptStatus"], $row1["PaymentStatus"], $row1["TotalCost"]);
+	$has_previous1 = true;
+	$row1 = mysqli_fetch_assoc($appt_result);
+	$appt1ID=$row1["AppointmentID"];
+	$petName1=getPetName($pet_list, $row1["PetID"]);
+	$serviceName1=getServiceName($service_list, $row1["ServiceID"]);
+	$appt1Date=$row1["ApptDate"];
+	$appt1Time=$row1["ApptTime"];
+	$appt1Status=$row1["ApptStatus"];
+	$appt1PayStatus=$row1["PaymentStatus"];
+	$appt1Cost=$row1["TotalCost"];
+	$appointment1 = new Appointment($appt1ID, $petName1, $serviceName1, $appt1Date, $appt1Time,
+		$appt1Status, $appt1PayStatus, $appt1Cost);
 	
 	$has_previous2=false;
 	$row2 = mysqli_fetch_assoc($appt_result);
 	if($row2){
-		$has_previous2=true;
-		$appointment2 = new Appointment($row2["AppointmentID"], $row2["CustomerID"], $row2["PetID"], $row2["ServiceID"], $row2["ApptDate"], $row2["ApptTime"],
-			$row2["ApptStatus"], $row2["PaymentStatus"], $row2["TotalCost"]);
+		$appt2ID=$row2["AppointmentID"];
+		$petName2=getPetName($pet_list, $row2["PetID"]);
+		$serviceName2=getServiceName($service_list, $row2["ServiceID"]);
+		$appt2Date=$row2["ApptDate"];
+		$appt2Time=$row2["ApptTime"];
+		$appt2Status=$row2["ApptStatus"];
+		$appt2PayStatus=$row2["PaymentStatus"];
+		$appt2Cost=$row2["TotalCost"];
+		$appointment2 = new Appointment($appt2ID, $petName2, $serviceName2, $appt2Date, $appt2Time,
+		$appt2Status, $appt2PayStatus, $appt2Cost);
 	}
 }
 	
@@ -106,11 +121,11 @@ function getPetName($pet_list, $petID)
 {
 	foreach($pet_list as $pet){
 		if($pet->getID()==$petID){
-			$selected_pet = $pet->getName();
-			return $selected_pet;
+			$selected_pet = $pet -> getName();
+			return $selected_pet();
 		}
 		else{
-			echo "error could not find matching pet id";
+			return "error could not find matching pet id";
 		}
 	}
 }
@@ -119,11 +134,11 @@ function getServiceName($service_list, $serviceID)
 {
 	foreach($service_list as $service){
 		if($service->getID()==$serviceID){
-			$selected_service = $service;
+			$selected_service = $service -> getName();
 			return $selected_service;
 		}
 		else{
-			echo "error could not find matching service id";
+			return "error could not find matching service id";
 		}
 	}
 }
@@ -164,11 +179,9 @@ function getServiceName($service_list, $serviceID)
 		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
             <h3>Book Appointment</h3>
             <h3><label for="Pet">Select Pet: </label>
-                <select required name="pet_name" id="Pets">
-                  <?php 
-					foreach($pet_list as $pet): 
-					?>
-						<option value="<?php echo $pet->getName(); ?>">
+                <select required name="pet_name" id="pet_name">
+                  <?php foreach($pet_list as $pet):?>
+						<option value="<?php echo $pet->getName();?>">
 						<?php echo $pet->getName();?>
 						</option>
 						<?php endforeach;?>
@@ -202,9 +215,7 @@ function getServiceName($service_list, $serviceID)
         <hr>
         <div class="wrapper2">
             <center>
-			<?php if($has_previous1){
-				$petName=getPetName($pet_list, $appointment1->getPetID());
-				$serviceName=getServiceName($service_list, $appointment1->getServiceID());
+			<?php if($has_previous1):
 				echo 
                 '<h3>Past Appointments</h3>
                 <table>
@@ -214,7 +225,7 @@ function getServiceName($service_list, $serviceID)
                 </tr>
                 <tr>
                   <th>Pet Name</th>
-                  <td>'.$petName.'
+                  <td>'.$appointment1->getPetName().'
 					</td>
                 </tr>
                 <tr>
@@ -227,7 +238,7 @@ function getServiceName($service_list, $serviceID)
                 </tr>
                 <tr>
                     <th>Service</th>
-                    <td>'.$serviceName.'</td>
+                    <td>'.$appointment1->getServiceName().'</td>
                 </tr>
                 <tr>
                     <th>Cost</th>
@@ -238,10 +249,8 @@ function getServiceName($service_list, $serviceID)
                     <td>'.$appointment1->getPaymentStatus().'
 					</td>
                 </tr>
-			</table>'; }?>
-			  <?php if($has_previous2){
-				$petName=getPetName($pet_list, $appointment2->getPetID());
-				$serviceName=getServiceName($service_list, $appointment2->getServiceID());
+			</table>'; endif?>
+			  <?php if($has_previous2):
 				echo 
                 '<h3>Past Appointments</h3>
                 <table>
@@ -251,7 +260,7 @@ function getServiceName($service_list, $serviceID)
                 </tr>
                 <tr>
                   <th>Pet Name</th>
-                  <td>'.$petName.'
+                  <td>'.$appointment2->getPetName().'
 					</td>
                 </tr>
                 <tr>
@@ -264,7 +273,7 @@ function getServiceName($service_list, $serviceID)
                 </tr>
                 <tr>
                     <th>Service</th>
-                    <td>'.$serviceName.'</td>
+                    <td>'.$appointment1->getServiceName().'</td>
                 </tr>
                 <tr>
                     <th>Cost</th>
@@ -275,7 +284,8 @@ function getServiceName($service_list, $serviceID)
                     <td>'.$appointment2->getPaymentStatus().'
 					</td>
                 </tr>
-              </table>'; }?>
+              </table>'; endif ?>
+			  
               <br/>
               <hr>
               <br/>
