@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +13,14 @@
 <body>
     <div class="container">
         <div class="main">
-            <a href="Home.php"><img src="images/PawSalonIcon.png" class="rounded-circle" width="150">
-            <img src="images/PawSalon.png" class="rounded-circle" width="350"></a>
+            <a href="Home.php">
+            <img src="PawSalonIcon.png" class="rounded-circle" width="150">
+            <img src="PawSalon.png" class="rounded-circle" width="350">
+            </a>
             <h1>Home</h1>
             <div class="topbar">
                 <h2>Customer Support: 254-323-3421</h2>
-                <a href="logout.php">Logout</a>
+                <a href="logout.php">Login/Logout</a>
                 <a href="Contact.php">Contact Us</a>
                 <a href="Gallery.php">Gallery</a>
                 <a href="Appointments.php">Appointments</a>
