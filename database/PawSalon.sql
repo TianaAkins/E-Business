@@ -175,7 +175,7 @@ INSERT INTO `customer` (`CustFirst`, `CustLast`, `Email`, `Address`, `Phone`, `A
 INSERT INTO `pet` (`PetName`, `PetType`, `Breed`, `HairType`, `Weight`, `CustomerID`) VALUES ('Barkie', 'Dog', 'Pitbull', 'Short', '45', '1') , ('Spots', 'Dog', 'Bulldog', 'Short', '140', '1');
 
 INSERT INTO `appointment` (`CustomerID`, `PetID`, `ServiceID`, `ApptDate`, `ApptTime`, `ApptStatus`, `PaymentStatus`, `TotalCost`) VALUES 
-('1', '1', '8', '2023-10-09', '18:00:00', 'Completed', b'1', '50'), ('1', '2', '10', '2023-12-04', '11:00:00', 'Completed', b'1', '90');
+('1', '1', '2', '2023-10-09', '18:00:00', 'Completed', b'1', '50'), ('1', '2', '4', '2023-12-04', '11:00:00', 'Completed', b'1', '90');
 
 COMMIT;
 
