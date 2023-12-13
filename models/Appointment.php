@@ -4,6 +4,7 @@ include("../database/dbConfig.php");
 class Appointment {
 
     private $id;
+    private $customerID;
     public $petName;
 	private $serviceName;
     private $appt_date;
