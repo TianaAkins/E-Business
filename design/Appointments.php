@@ -13,7 +13,7 @@ $pets = mysqli_fetch_all($pet_result,MYSQLI_ASSOC);
 		
 //Create array with pet models for session
 $pet_list=array();
-foreach($pet_list as $pet)
+foreach($pets as $pet)
 {
 	$current_pet = new Pet($pet["PetID"], $pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"]);
 	$pet_list["{$current_pet->getName()}"] = $current_pet;
@@ -122,7 +122,7 @@ function getPetName($pet_list, $petID)
 	foreach($pet_list as $pet){
 		if($pet->getID()==$petID){
 			$selected_pet = $pet -> getName();
-			return $selected_pet();
+			return $selected_pet;
 		}
 		else{
 			return "error could not find matching pet id";
