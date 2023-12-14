@@ -80,8 +80,8 @@ CREATE TABLE `Pet` (
 
 CREATE TABLE `Service` (
   `ServiceID` int(11) NOT NULL,
-  `ServiceName` int(11) NOT NULL,
-  `Description` int(11) NOT NULL,
+  `ServiceName` varchar(50) NOT NULL,
+  `Description` varchar(75) NOT NULL,
   `ServiceCost` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -164,6 +164,19 @@ ALTER TABLE `Appointment`
 --
 ALTER TABLE `Pet`
   ADD CONSTRAINT `FK_Pet_Customer` FOREIGN KEY (`CustomerID`) REFERENCES `Customer` (`CustomerID`);
+ 
+INSERT INTO `service` (`ServiceName`, `Description`, `ServiceCost`) VALUES 
+('Nail Trim', 'Includes nail trim, file, and buffer', 25), ('Haircut', 'Includes cut and style', 50), 
+('Bath and Brush', 'Includes deep shampoo and conditioner', 75), 
+('Full Service Package', 'Includes nail services, bath, de-shed, haircut, and teeth cleaning', 90);
+
+INSERT INTO `customer` (`CustFirst`, `CustLast`, `Email`, `Address`, `Phone`, `Active`, `Password`) VALUES ('John', 'Doe', 'johnd@gmail.com', '1234 Homewood Street, Killeen TX', '254-123-5457', b'1', 'Password');
+
+INSERT INTO `pet` (`PetName`, `PetType`, `Breed`, `HairType`, `Weight`, `CustomerID`) VALUES ('Barkie', 'Dog', 'Pitbull', 'Short', '45', '1') , ('Spots', 'Dog', 'Bulldog', 'Short', '140', '1');
+
+INSERT INTO `appointment` (`CustomerID`, `PetID`, `ServiceID`, `ApptDate`, `ApptTime`, `ApptStatus`, `PaymentStatus`, `TotalCost`) VALUES 
+('1', '1', '2', '2023-10-09', '18:00:00', 'Completed', b'1', '50'), ('1', '2', '4', '2023-12-04', '11:00:00', 'Completed', b'1', '90');
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

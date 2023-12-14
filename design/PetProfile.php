@@ -9,7 +9,7 @@
     	header("Location: Login.php");
 	}
 	
-	$sql = "Select PetName, PetType, Breed, HairType, Weight from pet where CustomerID = {$_SESSION['custID']}";
+	$sql = "Select PetID, PetName, PetType, Breed, HairType, Weight, CustomerID from pet where CustomerID = {$_SESSION['custID']}";
 	$result = $mysqli-> query($sql);
 	$pets = mysqli_fetch_all($result,MYSQLI_ASSOC);
 	$pet_selected=false;
@@ -17,7 +17,7 @@
 	$pet_list=array();
 	foreach($pets as $pet)
 	{
-		$current_pet = new Pet($pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"]);
+		$current_pet = new Pet($pet["PetID"], $pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"], $pet["CustomerID"]);
 		$pet_list["{$current_pet->getName()}"] = $current_pet;
 	}
 	

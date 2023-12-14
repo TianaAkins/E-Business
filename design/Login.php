@@ -1,6 +1,9 @@
 <?php
 session_start();
 include("../database/dbConfig.php");
+include("../models/pet.php");
+include("../models/customer.php");
+include("../models/service.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
@@ -17,13 +20,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     {
          while($row = $result->fetch_assoc())
         {
+			$_SESSION['custID']=$row["CustomerID"];
     	    $_SESSION['first_name'] = $row["CustFirst"];
     	    $_SESSION['last_name'] = $row["CustLast"];
     	    $_SESSION['address'] = $row["Address"];
     	    $_SESSION['phone'] = $row["Phone"];
     	    $_SESSION['email'] = $row["Email"];
-			$_SESSION['custID']=$row["CustomerID"];
-        }        
+        } 
+		
 		header("Location: customerprofile.php");
 	}
 	else {
@@ -77,7 +81,7 @@ function test_input($data)
             <div class="input-box">
                 <div class="input-field">
                         <i class='bx bx-user'></i>
-                        <input type="text" name="password" placeholder="Password" required style="width: 475px; height: 25px;">
+                        <input type="password" name="password" placeholder="Password" required style="width: 475px; height: 25px;">
                         
                 </div>
             </div>
