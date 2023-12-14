@@ -19,18 +19,6 @@ foreach($pets as $pet)
 	$pet_list["{$current_pet->getName()}"] = $current_pet;
 } 
 
-//Query for all available services
-$service_sql = "Select * from service";
-$service_result = $mysqli-> query($service_sql);
-$services = mysqli_fetch_all($service_result,MYSQLI_ASSOC);
-		
-//Create service model array
-$service_list=array();
-foreach($service_list as $service){
-	$current_service = new Service($service["ServiceID"], $service["ServiceName"], $service["ServiceCost"]);
-	$service_list["{$current_service->getName()}"] = $current_service;
-}
-
 if($_SERVER["REQUEST_METHOD"] == "POST" && formComplete())
 {
 	$selected_pet = $_POST['pet_name'];
@@ -65,32 +53,75 @@ $appt_result = $mysqli-> query($appt_sql);
 //Displays only if profile has previous appointments related to it
 if($appt_result){
 	
+	//Query for pets associated with customer profile
+	$pet_sql = "Select * from pet where CustomerID = {$_SESSION['custID']}";
+	$pet_result = $mysqli-> query($pet_sql);
+	$pets = mysqli_fetch_all($pet_result,MYSQLI_ASSOC);
+		
+	//Create array with pet models for session
+	$pet_list=array();
+	foreach($pets as $pet)
+	{
+		$current_pet = new Pet($pet["PetID"], $pet["PetName"], $pet["PetType"], $pet["Breed"], $pet["HairType"], $pet["Weight"]);
+		$pet_list["{$current_pet->getName()}"] = $current_pet;
+	}	 
+
+	//Query for all available services
+	$service_sql = "Select * from service";
+	$service_result = $mysqli-> query($service_sql);
+	$services = mysqli_fetch_all($service_result,MYSQLI_ASSOC);
+		
+	//Create service model array
+	$service_list=array();
+	foreach($services as $service){
+		$current_service = new Service($service["ServiceID"], $service["ServiceName"], $service["ServiceCost"]);
+		$service_list["{$current_service->getName()}"] = $current_service;
+	}
+	
 	//Create appointment models
 	$has_previous1 = true;
 	$row1 = mysqli_fetch_assoc($appt_result);
 	$appt1ID=$row1["AppointmentID"];
-	$petName1=getPetName($pet_list, $row1["PetID"]);
-	$serviceName1=getServiceName($service_list, $row1["ServiceID"]);
+	$cust1ID=$row1["CustomerID"];
+	$pet1ID=$row1["PetID"];
+	foreach($pet_list as $pet){
+		if ($pet->getID()==$pet1ID)
+			$pet1Name=$pet->getName();
+		}
+	$service1ID=$row1["ServiceID"];
+	foreach($service_list as $service){
+		if ($service->getID()==$service1ID)
+			$service1Name=$service->getName();
+	}
 	$appt1Date=$row1["ApptDate"];
 	$appt1Time=$row1["ApptTime"];
 	$appt1Status=$row1["ApptStatus"];
 	$appt1PayStatus=$row1["PaymentStatus"];
 	$appt1Cost=$row1["TotalCost"];
-	$appointment1 = new Appointment($appt1ID, $petName1, $serviceName1, $appt1Date, $appt1Time,
+	$appointment1 = new Appointment($appt1ID, $cust1ID, $pet1Name, $service1Name, $appt1Date, $appt1Time,
 		$appt1Status, $appt1PayStatus, $appt1Cost);
 	
 	$has_previous2=false;
 	$row2 = mysqli_fetch_assoc($appt_result);
 	if($row2){
 		$appt2ID=$row2["AppointmentID"];
-		$petName2=getPetName($pet_list, $row2["PetID"]);
-		$serviceName2=getServiceName($service_list, $row2["ServiceID"]);
+		$cust2ID=$row2["CustomerID"];
+		$pet2ID=$row2["PetID"];
+		foreach($pet_list as $pet){
+		if ($pet->getID()==$pet2ID)
+			$pet2Name=$pet->getName();
+		}
+		$service2ID=$row2["ServiceID"];
+		foreach($service_list as $service){
+		if ($service->getID()==$service2ID)
+			$service2Name=$service->getName();
+		}
 		$appt2Date=$row2["ApptDate"];
 		$appt2Time=$row2["ApptTime"];
 		$appt2Status=$row2["ApptStatus"];
 		$appt2PayStatus=$row2["PaymentStatus"];
 		$appt2Cost=$row2["TotalCost"];
-		$appointment2 = new Appointment($appt2ID, $petName2, $serviceName2, $appt2Date, $appt2Time,
+		$appointment2 = new Appointment($appt2ID, $cust2ID, $pet2Name, $service2Name, $appt2Date, $appt2Time,
 		$appt2Status, $appt2PayStatus, $appt2Cost);
 	}
 }
@@ -116,32 +147,6 @@ function formComplete()
 		}
 	return $complete;
 	}
-	
-function getPetName($pet_list, $petID)
-{
-	foreach($pet_list as $pet){
-		if($pet->getID()==$petID){
-			$selected_pet = $pet -> getName();
-			return $selected_pet;
-		}
-		else{
-			return "error could not find matching pet id";
-		}
-	}
-}
-
-function getServiceName($service_list, $serviceID)
-{
-	foreach($service_list as $service){
-		if($service->getID()==$serviceID){
-			$selected_service = $service -> getName();
-			return $selected_service;
-		}
-		else{
-			return "error could not find matching service id";
-		}
-	}
-}
 
 ?>
 
