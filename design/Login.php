@@ -63,7 +63,7 @@ function test_input($data)
 
             <div class="image">
                 <a href="Home.php">
-                <img src="PawSalon.png" alt="Icon" class="Icon">
+                <img src="images/PawSalon.png" alt="Icon" class="Icon">
                 </a>
             </div>   
 
