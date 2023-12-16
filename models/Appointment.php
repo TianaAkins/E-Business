@@ -9,16 +9,19 @@ class Appointment {
 	private $serviceName;
     private $appt_date;
     private $appt_time;
+	private $appt_status;
 	private $payment_status;
 	private $total_cost;
   
-    public function __construct($id, $petName, $serviceName, $appt_date, $appt_time, $payment_status, $total_cost) 
+    public function __construct($id, $customerID, $petName, $serviceName, $appt_date, $appt_time, $appt_status, $payment_status, $total_cost) 
     {
 		$this->id = $id;
+		$this->customerID=$customerID;
         $this->petName = $petName;
 		$this->serviceName = $serviceName;
         $this->appt_date=$appt_date;
         $this->appt_time = $appt_time;
+		$this->appt_status = $appt_status;
 		$this->payment_status = $payment_status;
 		$this->total_cost = $total_cost;
     }
@@ -48,8 +51,13 @@ class Appointment {
     function setTime($appt_time)
     {
         $this->appt_time = $appt_time;
-    }    
-
+    } 
+	
+	function setApptStatus($payment_status)
+	{
+		$this->appt_status = $payment_status;
+	}
+	
 	function setPaymentStatus($payment_status)
 	{
 		$this->payment_status = $payment_status;
@@ -91,6 +99,11 @@ class Appointment {
         return $this->appt_time;
     }
 
+	function getApptStatus()
+	{
+		return $this->appt_status;
+	}
+	
 	function getPaymentStatus()
 	{
 		if($this->payment_status==1)

@@ -12,8 +12,8 @@
     <div class="container">
         <div class="main">
             <a href="Home.php">
-            <img src="PawSalonIcon.png" class="rounded-circle" width="150">
-            <img src="PawSalon.png" class="rounded-circle" width="350">
+            <img src="images/PawSalonIcon.png" class="rounded-circle" width="150">
+            <img src="images/PawSalon.png" class="rounded-circle" width="350">
             </a>
             <h1>Contact Us</h1>
             <div class="topbar">
