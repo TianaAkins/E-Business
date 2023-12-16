@@ -6,6 +6,12 @@ include("../models/customer.php");
 include("../models/appointment.php");
 include("../models/service.php");
 
+//Reroutes user to login if not logged in.
+if($_SESSION['first_name'] == "")
+{
+    header("Location: Login.php");
+}
+
 //Query for pets associated with customer profile
 $pet_sql = "Select * from pet where CustomerID = {$_SESSION['custID']}";
 $pet_result = $mysqli-> query($pet_sql);
